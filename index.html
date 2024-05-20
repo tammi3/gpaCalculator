@@ -1,0 +1,123 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Grading System</title>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css"
+      integrity="sha512-5A8nwdMOWrSz20fDsjczgUidUBR8liPYU+WymTZP1lmY9G6Oc7HlZv156XqnsgNUzTyMefFTcsFH/tnJE/+xBg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="vue-app">
+      <div class="header">
+        <h1><img src="images/grades.gif" alt="" /> Grading System</h1>
+      </div>
+
+      <p v-show="error != ''" class="errorText">{{error}}</p>
+
+      <div class="inputDetails">
+        <div v-show="fullName==''">
+          <div class="inputBox">
+            <label for="">First Name:</label>
+            <input type="text" v-model="fname" v-on:keydown="clearError" />
+          </div>
+
+          <div class="inputBox">
+            <label for="">Last Name:</label>
+            <input type="text" v-model="lname" v-on:keydown="clearError" />
+          </div>
+        </div>
+
+        <div class="inputBox">
+          <label for="course">Course Title:</label>
+          <input
+            type="text"
+            v-model="courseDetails.title"
+            v-on:keydown="clearError"
+          />
+        </div>
+
+
+        <div class="inputBox">
+          <label for="score">Course Score:</label>
+          <input
+            type="number"
+            min="1" max="100"
+            v-model="courseDetails.score"
+            v-on:keydown="clearError"
+            v-on:keyup="max100"
+            placeholder="1-100"
+          />
+        </div>
+
+        <div class="inputBox">
+          <label for="creditUnit">Credit Unit:</label>
+          <input
+            type="number"
+            min="1" max="10"
+            v-model="courseDetails.credit"
+            v-on:keyup.enter="gradeStudent"
+            v-on:keydown="clearError"
+          />
+        </div>
+
+        <div class="buttons">
+          <button v-on:click="gradeStudent">Grade</button>
+          <button v-on:click="resetGradingSystem">Reset</button>
+        </div>
+      </div>
+
+      <div v-if="studentGrade != ''" class="result">
+        
+        <h1 class="header">Grade Summary</h1>
+        <div class="gradeSummary">
+          <ul>
+            <h1>{{fullName}}</h1>
+            <li v-for="(courseDetails, index) in studentGrade" :key="index">
+              <p class="courseTitle">{{courseDetails.title}}</p>
+              <span
+                >
+                <p v-if="courseDetails.grade.includes('F')" class="redText">
+                  {{courseDetails.grade}}
+                </p>
+                <p v-else class="greenText">{{courseDetails.grade}}</p>
+                <p>{{courseDetails.score}}/100</p>
+                <i
+                  class="fa fa-trash fa-1x"
+                  aria-hidden="true"
+                  v-on:click="removeCourse(index)"
+                ></i>
+              </span>
+            </li>
+          </ul>
+
+          <div class="progressBar" :style="`--prog: ${gpaCalc}`">
+            <div class="bar">
+              <div class="outer">
+                <div class="inner">
+                  <div id="gpa">{{gpa}}<span>GPA</span></div>
+                </div>
+              </div>
+            </div>
+            <svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="300px" height="300px">
+              <defs>
+                 <linearGradient id="GradientColor">
+                    <stop offset="0%" stop-color=" #080f5c" />
+                    <stop offset="100%" stop-color="#526D82" />
+                 </linearGradient>
+              </defs>
+              <circle cx="150" cy="150" r="140" stroke-linecap="round" />
+      </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script src="app.js"></script>
+  </body>
+</html>
